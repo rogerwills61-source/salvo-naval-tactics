@@ -37,15 +37,6 @@ Once hosted over HTTPS (such as **GitHub Pages**), **SALVO!** can be installed d
 
 ---
 
-## Deploying to GitHub Pages
-
-1. Create a new public repository on GitHub (for example, `salvo-naval-tactics`).
-2. Upload **`index.html`** and **`README.md`** to the root of the repository (`main` branch).
-3. Go to **Settings → Pages**, set **Source** to **Deploy from a branch**, select **`main`** and **`/ (root)`**, and click **Save**.
-4. Open your published `https://<username>.github.io/<repo-name>/` URL on any phone, tablet, or computer.
-
----
-
 ## Technical Architecture
 
 * **Zero-Build Single-File Runtime (`index.html`):** Self-contained HTML5, CSS3, and ES6+ JavaScript requiring no bundler, build step, or backend server.
