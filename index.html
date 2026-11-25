@@ -7,6 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SALVO!" />
+  <link rel="manifest" href="./manifest.webmanifest?v=4" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png?v=4" />
+  <link id="favicon-link" rel="icon" type="image/png" href="./icon-192.png?v=4" />
   <title>SALVO! — 3D Comic Naval Tactics</title>
 
   <!-- Google Fonts: Classic War-Comic Typography -->
@@ -581,7 +584,7 @@
     'use strict';
 
     // =========================================================================
-    // 0. SELF-CONTAINED PWA MANIFEST, ICONS, SERVICE WORKER & AUTO-HIDE INSTALL
+    // 0. PERSISTENT PWA INSTALL, SERVICE WORKER & FORESHORTENED DESTROYER ICON
     // =========================================================================
     const pwaInstall = {
       deferredPrompt: null,
@@ -595,210 +598,270 @@
         const ctx = c.getContext('2d');
         const u = size / 512;
 
-        // 1. Vibrant comic sky gradient
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, size * 0.72);
-        skyGrad.addColorStop(0, '#0c4a6e');
-        skyGrad.addColorStop(0.55, '#0284c7');
-        skyGrad.addColorStop(1, '#38bdf8');
+        // 1. Stormy naval sky + subtle comic speed rays
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, 290 * u);
+        skyGrad.addColorStop(0, '#07172d');
+        skyGrad.addColorStop(0.48, '#0f3d68');
+        skyGrad.addColorStop(0.85, '#2879ad');
+        skyGrad.addColorStop(1, '#60b5e5');
         ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, size, size);
+        ctx.fillRect(0, 0, size, 290 * u);
 
-        // 2. Pop-art sunburst rays radiating behind the battle
-        const rayCx = size * 0.52;
-        const rayCy = size * 0.56;
-        const rayCount = 16;
-        for (let i = 0; i < rayCount; i++) {
-          const a0 = (i / rayCount) * Math.PI * 2;
-          const a1 = ((i + 0.45) / rayCount) * Math.PI * 2;
+        ctx.fillStyle = 'rgba(186, 230, 253, 0.14)';
+        [
+          [[256, 280], [0, 20], [0, 75]],
+          [[256, 280], [95, 0], [145, 0]],
+          [[256, 280], [367, 0], [417, 0]],
+          [[256, 280], [512, 20], [512, 75]]
+        ].forEach(tri => {
           ctx.beginPath();
-          ctx.moveTo(rayCx, rayCy);
-          ctx.arc(rayCx, rayCy, size * 0.85, a0, a1);
+          ctx.moveTo(tri[0][0] * u, tri[0][1] * u);
+          ctx.lineTo(tri[1][0] * u, tri[1][1] * u);
+          ctx.lineTo(tri[2][0] * u, tri[2][1] * u);
           ctx.closePath();
-          ctx.fillStyle = i % 2 === 0 ? 'rgba(250, 204, 21, 0.24)' : 'rgba(255, 255, 255, 0.12)';
           ctx.fill();
-        }
+        });
 
-        // 3. Subtle comic halftone dots across upper corners
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.22)';
-        const dotStep = Math.max(8, Math.round(18 * u));
-        for (let y = dotStep; y < size * 0.65; y += dotStep) {
-          for (let x = dotStep; x < size; x += dotStep) {
-            ctx.beginPath();
-            ctx.arc(x, y, 2.2 * u, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
+        // 2. Deep ocean swell
+        const seaGrad = ctx.createLinearGradient(0, 274 * u, 0, size);
+        seaGrad.addColorStop(0, '#0a3a5c');
+        seaGrad.addColorStop(0.45, '#072740');
+        seaGrad.addColorStop(1, '#031321');
+        ctx.fillStyle = seaGrad;
+        ctx.fillRect(0, 274 * u, size, 238 * u);
 
-        // 4. Rolling comic ocean waves at bottom
-        const waterY = size * 0.68;
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, waterY - 4 * u, size, size - waterY + 4 * u);
-        ctx.fillStyle = '#0369a1';
-        ctx.fillRect(0, waterY, size, size - waterY);
-
-        // White comic wave crests
-        ctx.strokeStyle = '#e0f2fe';
-        ctx.lineWidth = Math.max(2, 5 * u);
-        ctx.lineCap = 'round';
-        for (let row = 0; row < 3; row++) {
-          const wy = waterY + (26 + row * 42) * u;
-          ctx.beginPath();
-          for (let wx = -20 * u; wx <= size + 20 * u; wx += 44 * u) {
-            ctx.moveTo(wx, wy);
-            ctx.quadraticCurveTo(wx + 11 * u, wy - 8 * u, wx + 22 * u, wy);
-            ctx.quadraticCurveTo(wx + 33 * u, wy + 8 * u, wx + 44 * u, wy);
-          }
-          ctx.stroke();
-        }
-
-        // 5. Distant enemy warship silhouette on right (taking fire!)
-        ctx.save();
-        ctx.translate(size * 0.77, waterY + 2 * u);
-        ctx.rotate(0.08);
-        ctx.fillStyle = '#1e293b';
+        // 3. Phased-array radar mast & tiered stealth bridge
         ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 4 * u;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 5.5 * u;
         ctx.beginPath();
-        ctx.moveTo(-64 * u, 0);
-        ctx.lineTo(-52 * u, -18 * u);
-        ctx.lineTo(-22 * u, -18 * u);
-        ctx.lineTo(-16 * u, -38 * u);
-        ctx.lineTo(14 * u, -38 * u);
-        ctx.lineTo(22 * u, -18 * u);
-        ctx.lineTo(66 * u, -22 * u);
-        ctx.lineTo(50 * u, 0);
+        ctx.moveTo(256 * u, 220 * u);
+        ctx.lineTo(256 * u, 122 * u);
+        ctx.moveTo(216 * u, 148 * u);
+        ctx.lineTo(296 * u, 148 * u);
+        ctx.moveTo(228 * u, 168 * u);
+        ctx.lineTo(284 * u, 168 * u);
+        ctx.stroke();
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.lineWidth = 2.5 * u;
+        ctx.fillRect(224 * u, 142 * u, 64 * u, 6 * u);
+        ctx.strokeRect(224 * u, 142 * u, 64 * u, 6 * u);
+
+        const superGrad = ctx.createLinearGradient(186 * u, 0, 326 * u, 0);
+        superGrad.addColorStop(0, '#475569');
+        superGrad.addColorStop(0.48, '#94a3b8');
+        superGrad.addColorStop(0.52, '#e2e8f0');
+        superGrad.addColorStop(1, '#94a3b8');
+
+        ctx.fillStyle = superGrad;
+        ctx.lineWidth = 3.5 * u;
+        ctx.beginPath();
+        ctx.moveTo(222 * u, 226 * u);
+        ctx.lineTo(230 * u, 188 * u);
+        ctx.lineTo(282 * u, 188 * u);
+        ctx.lineTo(290 * u, 226 * u);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
-        ctx.restore();
 
-        // 6. Jagged comic explosion burst ("BOOM!") over enemy ship
-        const drawStarburst = (cx, cy, spikes, outerR, innerR, fillCol, strokeCol, lw) => {
+        ctx.beginPath();
+        ctx.moveTo(186 * u, 272 * u);
+        ctx.lineTo(204 * u, 218 * u);
+        ctx.lineTo(308 * u, 218 * u);
+        ctx.lineTo(326 * u, 272 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.moveTo(208 * u, 228 * u);
+        ctx.lineTo(304 * u, 228 * u);
+        ctx.lineTo(309 * u, 239 * u);
+        ctx.lineTo(203 * u, 239 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        // 4. Foredeck & flared knife-edge destroyer bow
+        ctx.fillStyle = '#94a3b8';
+        ctx.beginPath();
+        ctx.moveTo(134 * u, 288 * u);
+        ctx.lineTo(186 * u, 266 * u);
+        ctx.lineTo(326 * u, 266 * u);
+        ctx.lineTo(378 * u, 288 * u);
+        ctx.lineTo(256 * u, 356 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        const portGrad = ctx.createLinearGradient(34 * u, 288 * u, 256 * u, 472 * u);
+        portGrad.addColorStop(0, '#334155');
+        portGrad.addColorStop(0.6, '#475569');
+        portGrad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = portGrad;
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 472 * u);
+        ctx.lineTo(34 * u, 316 * u);
+        ctx.lineTo(134 * u, 288 * u);
+        ctx.lineTo(256 * u, 356 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        const stbdGrad = ctx.createLinearGradient(256 * u, 288 * u, 478 * u, 472 * u);
+        stbdGrad.addColorStop(0, '#cbd5e1');
+        stbdGrad.addColorStop(0.55, '#94a3b8');
+        stbdGrad.addColorStop(1, '#475569');
+        ctx.fillStyle = stbdGrad;
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 472 * u);
+        ctx.lineTo(478 * u, 316 * u);
+        ctx.lineTo(378 * u, 288 * u);
+        ctx.lineTo(256 * u, 356 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Red boot-topping waterline
+        ctx.fillStyle = '#dc2626';
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 466 * u);
+        ctx.lineTo(48 * u, 324 * u);
+        ctx.lineTo(62 * u, 333 * u);
+        ctx.lineTo(256 * u, 456 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 466 * u);
+        ctx.lineTo(464 * u, 324 * u);
+        ctx.lineTo(450 * u, 333 * u);
+        ctx.lineTo(256 * u, 456 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        // 5. Realistic churning sea spray plumes
+        ctx.fillStyle = 'rgba(224, 242, 254, 0.85)';
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 466 * u);
+        ctx.bezierCurveTo(195 * u, 435 * u, 120 * u, 382 * u, 32 * u, 330 * u);
+        ctx.bezierCurveTo(16 * u, 358 * u, 38 * u, 412 * u, 108 * u, 452 * u);
+        ctx.bezierCurveTo(164 * u, 484 * u, 218 * u, 496 * u, 256 * u, 492 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 466 * u);
+        ctx.bezierCurveTo(317 * u, 435 * u, 392 * u, 382 * u, 480 * u, 330 * u);
+        ctx.bezierCurveTo(496 * u, 358 * u, 474 * u, 412 * u, 404 * u, 452 * u);
+        ctx.bezierCurveTo(348 * u, 484 * u, 294 * u, 496 * u, 256 * u, 492 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 470 * u);
+        ctx.bezierCurveTo(205 * u, 455 * u, 135 * u, 418 * u, 58 * u, 364 * u);
+        ctx.bezierCurveTo(72 * u, 402 * u, 128 * u, 454 * u, 206 * u, 482 * u);
+        ctx.lineTo(256 * u, 486 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(256 * u, 470 * u);
+        ctx.bezierCurveTo(307 * u, 455 * u, 377 * u, 418 * u, 454 * u, 364 * u);
+        ctx.bezierCurveTo(440 * u, 402 * u, 384 * u, 454 * u, 306 * u, 482 * u);
+        ctx.lineTo(256 * u, 486 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        // 6. Forward 5-inch deck turret + fiery muzzle blast
+        ctx.fillStyle = superGrad;
+        ctx.beginPath();
+        ctx.moveTo(222 * u, 306 * u);
+        ctx.lineTo(232 * u, 276 * u);
+        ctx.lineTo(280 * u, 276 * u);
+        ctx.lineTo(290 * u, 306 * u);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        const drawBurst = (radOut, radIn, fill) => {
           ctx.beginPath();
-          for (let i = 0; i < spikes * 2; i++) {
-            const rad = i % 2 === 0 ? outerR : innerR;
-            const ang = (i * Math.PI) / spikes - Math.PI / 2;
-            const px = cx + Math.cos(ang) * rad;
-            const py = cy + Math.sin(ang) * rad;
+          for (let i = 0; i < 16; i++) {
+            const rad = (i % 2 === 0 ? radOut : radIn) * u;
+            const ang = (i * Math.PI) / 8;
+            const px = 256 * u + Math.cos(ang) * rad;
+            const py = 306 * u + Math.sin(ang) * rad;
             if (i === 0) ctx.moveTo(px, py);
             else ctx.lineTo(px, py);
           }
           ctx.closePath();
-          ctx.fillStyle = fillCol;
+          ctx.fillStyle = fill;
           ctx.fill();
-          if (strokeCol) {
-            ctx.lineWidth = lw;
-            ctx.strokeStyle = strokeCol;
-            ctx.stroke();
-          }
         };
+        drawBurst(54, 24, '#f97316');
+        drawBurst(34, 14, '#fef08a');
 
-        const boomX = size * 0.76;
-        const boomY = size * 0.56;
-        drawStarburst(boomX, boomY, 12, 86 * u, 44 * u, '#ef4444', '#0f172a', 6 * u);
-        drawStarburst(boomX, boomY, 10, 62 * u, 30 * u, '#f97316', null, 0);
-        drawStarburst(boomX, boomY, 8, 38 * u, 18 * u, '#facc15', null, 0);
-
-        // 7. Foreground cast-pewter warship on left firing a broadside!
+        // 7. Foreshortened brass artillery shell hurtling toward foreground
         ctx.save();
-        ctx.translate(size * 0.30, waterY + 6 * u);
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = 6 * u;
-        ctx.strokeStyle = '#0f172a';
-
-        // Pewter hull
-        ctx.fillStyle = '#94a3b8';
+        ctx.translate(332 * u, 398 * u);
+        ctx.rotate(0.45);
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.85)';
         ctx.beginPath();
-        ctx.moveTo(-112 * u, -4 * u);
-        ctx.lineTo(-96 * u, -34 * u);
-        ctx.lineTo(74 * u, -34 * u);
-        ctx.lineTo(122 * u, -44 * u);
-        ctx.lineTo(94 * u, -2 * u);
+        ctx.moveTo(-24 * u, -22 * u);
+        ctx.lineTo(-72 * u, -115 * u);
+        ctx.lineTo(0, -80 * u);
+        ctx.lineTo(72 * u, -115 * u);
+        ctx.lineTo(24 * u, -22 * u);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 5 * u;
+        ctx.beginPath();
+        ctx.ellipse(0, -18 * u, 32 * u, 18 * u, 0, Math.PI, 0, false);
+        ctx.lineTo(46 * u, 28 * u);
+        ctx.ellipse(0, 28 * u, 46 * u, 26 * u, 0, 0, Math.PI, false);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
-        // Red enamel class stripe
-        ctx.fillStyle = '#ef4444';
-        ctx.fillRect(-84 * u, -26 * u, 152 * u, 9 * u);
-
-        // Superstructure & bridge
-        ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(-44 * u, -62 * u, 68 * u, 28 * u);
-        ctx.strokeRect(-44 * u, -62 * u, 68 * u, 28 * u);
-
-        // Funnel + mast
-        ctx.fillStyle = '#475569';
-        ctx.fillRect(-32 * u, -84 * u, 18 * u, 22 * u);
-        ctx.strokeRect(-32 * u, -84 * u, 18 * u, 22 * u);
+        ctx.fillStyle = '#fef08a';
         ctx.beginPath();
-        ctx.moveTo(6 * u, -62 * u);
-        ctx.lineTo(6 * u, -96 * u);
-        ctx.moveTo(-8 * u, -84 * u);
-        ctx.lineTo(20 * u, -84 * u);
-        ctx.stroke();
-
-        // Forward turret & elevated cannon barrel
-        ctx.fillStyle = '#e2e8f0';
-        ctx.fillRect(36 * u, -50 * u, 30 * u, 16 * u);
-        ctx.strokeRect(36 * u, -50 * u, 30 * u, 16 * u);
-        ctx.beginPath();
-        ctx.moveTo(64 * u, -44 * u);
-        ctx.lineTo(96 * u, -58 * u);
+        ctx.ellipse(0, 35 * u, 35 * u, 23 * u, 0, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
         ctx.restore();
 
-        // 8. Muzzle flash & dashed parabolic shell trail arcing to the explosion
-        const muzzleX = size * 0.50;
-        const muzzleY = size * 0.57;
-        drawStarburst(muzzleX, muzzleY, 7, 26 * u, 10 * u, '#fef08a', '#0f172a', 4 * u);
-
+        // 8. Bold tilted "SALVO!" comic title banner
         ctx.save();
-        ctx.strokeStyle = '#fef08a';
-        ctx.lineWidth = 6 * u;
-        ctx.setLineDash([12 * u, 10 * u]);
-        ctx.beginPath();
-        ctx.moveTo(muzzleX + 8 * u, muzzleY - 8 * u);
-        ctx.quadraticCurveTo(size * 0.63, size * 0.37, boomX - 18 * u, boomY - 12 * u);
-        ctx.stroke();
-        ctx.restore();
-
-        // 9. Bold tilted "SALVO!" pop-art comic banner across top
-        ctx.save();
-        ctx.translate(size * 0.5, size * 0.22);
-        ctx.rotate(-0.055);
-        const bannerW = size * 0.78;
-        const bannerH = size * 0.25;
-        const bx = -bannerW * 0.5;
-        const by = -bannerH * 0.5;
-
-        // Hard comic drop shadow
+        ctx.translate(256 * u, 78 * u);
+        ctx.rotate(-0.038);
         ctx.fillStyle = '#0f172a';
-        ctx.fillRect(bx + 10 * u, by + 10 * u, bannerW, bannerH);
-
-        // Bright yellow banner fill + thick ink border
+        ctx.fillRect(-196 * u, -42 * u, 406 * u, 96 * u);
         ctx.fillStyle = '#facc15';
-        ctx.fillRect(bx, by, bannerW, bannerH);
-        ctx.lineWidth = Math.max(4, 9 * u);
+        ctx.fillRect(-204 * u, -50 * u, 406 * u, 96 * u);
+        ctx.lineWidth = Math.max(4, 7 * u);
         ctx.strokeStyle = '#0f172a';
-        ctx.strokeRect(bx, by, bannerW, bannerH);
+        ctx.strokeRect(-204 * u, -50 * u, 406 * u, 96 * u);
 
-        // Crisp "SALVO!" text with bold outline
-        ctx.font = `900 ${Math.round(108 * u)}px Bangers, Impact, sans-serif`;
+        ctx.font = `900 ${Math.round(92 * u)}px Bangers, Impact, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.lineWidth = Math.max(3, 7 * u);
-        ctx.strokeStyle = '#0f172a';
-        ctx.strokeText('SALVO!', 0, 5 * u);
+        ctx.strokeText('SALVO!', 0, 4 * u);
         ctx.fillStyle = '#fefce8';
-        ctx.fillText('SALVO!', 0, 5 * u);
+        ctx.fillText('SALVO!', 0, 4 * u);
         ctx.restore();
 
-        // Outer comic panel frame border
-        ctx.lineWidth = Math.max(4, 12 * u);
+        ctx.lineWidth = Math.max(4, 10 * u);
         ctx.strokeStyle = '#0f172a';
-        ctx.strokeRect(6 * u, 6 * u, size - 12 * u, size - 12 * u);
-
+        ctx.strokeRect(5 * u, 5 * u, size - 10 * u, size - 10 * u);
         return c.toDataURL('image/png');
       },
 
@@ -815,66 +878,18 @@
         const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
         this.isIosSafari = isIos && isSafari;
 
-        // Inject dynamic Web App Manifest + Apple Touch Icon
         try {
-          const icon192 = this.generateIconDataUrl(192);
-          const icon512 = this.generateIconDataUrl(512);
-
-          const appleLink = document.createElement('link');
-          appleLink.rel = 'apple-touch-icon';
-          appleLink.href = icon192;
-          document.head.appendChild(appleLink);
-
-          const startUrl = window.location.origin + window.location.pathname;
-          const manifestObj = {
-            name: 'SALVO! — 3D Comic Naval Tactics',
-            short_name: 'SALVO!',
-            description: '3D tactical naval artillery game with cast-pewter warships, Solo AI, and cross-device 2-player battles.',
-            start_url: startUrl,
-            scope: startUrl,
-            display: 'standalone',
-            orientation: 'any',
-            background_color: '#0b2545',
-            theme_color: '#0b2545',
-            icons: [
-              { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-              { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
-            ]
-          };
-          const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
-          const manifestUrl = URL.createObjectURL(manifestBlob);
-          const manifestLink = document.createElement('link');
-          manifestLink.rel = 'manifest';
-          manifestLink.href = manifestUrl;
-          document.head.appendChild(manifestLink);
+          if (window.location.protocol === 'file:') {
+            const icon192 = this.generateIconDataUrl(192);
+            const appleEl = document.getElementById('apple-touch-icon-link');
+            const favEl = document.getElementById('favicon-link');
+            if (appleEl) appleEl.href = icon192;
+            if (favEl) favEl.href = icon192;
+          }
         } catch (e) {}
 
-        // Register lightweight offline service worker when hosted over HTTPS / localhost
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-          try {
-            const swCode = `
-              const CACHE_NAME = 'salvo-3d-v1';
-              self.addEventListener('install', (e) => {
-                self.skipWaiting();
-              });
-              self.addEventListener('activate', (e) => {
-                e.waitUntil(self.clients.claim());
-              });
-              self.addEventListener('fetch', (e) => {
-                if (e.request.method !== 'GET') return;
-                e.respondWith(
-                  fetch(e.request).then((res) => {
-                    const copy = res.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy)).catch(() => {});
-                    return res;
-                  }).catch(() => caches.match(e.request))
-                );
-              });
-            `;
-            const swBlob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(swBlob);
-            navigator.serviceWorker.register(swUrl).catch(() => {});
-          } catch (e) {}
+          navigator.serviceWorker.register('./sw.js?v=4', { scope: './', updateViaCache: 'none' }).catch(() => {});
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {

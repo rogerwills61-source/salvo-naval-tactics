@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Dramatic Naval Storm & Horizon Sky -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#07172d"/>
+      <stop offset="48%" stop-color="#0f3d68"/>
+      <stop offset="85%" stop-color="#2879ad"/>
+      <stop offset="100%" stop-color="#60b5e5"/>
+    </linearGradient>
+
+    <!-- Deep Churning Ocean Water -->
+    <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a3a5c"/>
+      <stop offset="45%" stop-color="#072740"/>
+      <stop offset="100%" stop-color="#031321"/>
+    </linearGradient>
+
+    <!-- Realistic Cast-Steel Hull Shading (Shadow Port / Lit Starboard) -->
+    <linearGradient id="hullPort" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="55%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="hullStarboard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <linearGradient id="deckGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="60%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+    <linearGradient id="superGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="48%" stop-color="#94a3b8"/>
+      <stop offset="52%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+
+    <!-- Artillery Shell Brass & Copper Metallic Gradients -->
+    <linearGradient id="shellBrass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="32%" stop-color="#f59e0b"/>
+      <stop offset="55%" stop-color="#fef08a"/>
+      <stop offset="85%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <radialGradient id="shellNose" cx="38%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="28%" stop-color="#fde047"/>
+      <stop offset="72%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </radialGradient>
+
+    <!-- Muzzle Blast Fire Glow -->
+    <radialGradient id="muzzleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#fef08a"/>
+      <stop offset="65%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Subtle Comic Halftone Accent -->
+    <pattern id="comicDots" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="7" cy="7" r="1.6" fill="#0f172a" fill-opacity="0.18"/>
+    </pattern>
+  </defs>
+
+  <!-- 1. Sky & Subtle Comic Speed Rays -->
+  <rect width="512" height="290" fill="url(#skyGrad)"/>
+  <g fill="#bae6fd" fill-opacity="0.12">
+    <polygon points="256,280 0,20 0,75"/>
+    <polygon points="256,280 95,0 145,0"/>
+    <polygon points="256,280 367,0 417,0"/>
+    <polygon points="256,280 512,20 512,75"/>
+  </g>
+  <rect width="512" height="275" fill="url(#comicDots)"/>
+
+  <!-- 2. Ocean Horizon & Swell -->
+  <rect x="0" y="274" width="512" height="238" fill="url(#seaGrad)"/>
+  <path d="M0,274 Q128,270 256,274 T512,274" fill="none" stroke="#0f172a" stroke-width="3"/>
+  <g stroke="#38bdf8" stroke-opacity="0.22" stroke-width="2.5" fill="none">
+    <path d="M12,302 Q90,296 165,304"/>
+    <path d="M345,302 Q425,296 500,304"/>
+    <path d="M4,342 Q75,335 135,346"/>
+    <path d="M378,342 Q445,335 508,346"/>
+  </g>
+
+  <!-- 3. Aft Phased-Array Radar Mast & Funnel Exhaust -->
+  <path d="M242,175 Q225,130 185,105 Q220,120 252,165 Z" fill="#1e293b" fill-opacity="0.45"/>
+  <g stroke="#0f172a" stroke-linecap="round" fill="none">
+    <line x1="256" y1="220" x2="256" y2="122" stroke-width="5.5"/>
+    <line x1="256" y1="185" x2="236" y2="215" stroke-width="3.5"/>
+    <line x1="256" y1="185" x2="276" y2="215" stroke-width="3.5"/>
+    <line x1="216" y1="148" x2="296" y2="148" stroke-width="4.5"/>
+    <line x1="228" y1="168" x2="284" y2="168" stroke-width="3.5"/>
+    <line x1="240" y1="132" x2="272" y2="132" stroke-width="3"/>
+  </g>
+  <rect x="224" y="142" width="64" height="6" rx="2" fill="#e2e8f0" stroke="#0f172a" stroke-width="2.5"/>
+
+  <!-- 4. Tiered Modern Destroyer Superstructure & Bridge -->
+  <polygon points="222,226 230,188 282,188 290,226" fill="url(#superGrad)" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="186,272 204,218 308,218 326,272" fill="url(#superGrad)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="170,242 202,232 202,246 174,252" fill="#64748b" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="342,242 310,232 310,246 338,252" fill="#cbd5e1" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="208,228 304,228 309,239 203,239" fill="#0f172a"/>
+  <line x1="232" y1="228" x2="230" y2="239" stroke="#64748b" stroke-width="2"/>
+  <line x1="256" y1="228" x2="256" y2="239" stroke="#64748b" stroke-width="2"/>
+  <line x1="280" y1="228" x2="282" y2="239" stroke="#64748b" stroke-width="2"/>
+
+  <!-- Foredeck -->
+  <polygon points="134,288 186,266 326,266 378,288 256,356" fill="url(#deckGrad)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="224,274 288,274 274,312 238,312" fill="#475569" stroke="#0f172a" stroke-width="2"/>
+  <line x1="256" y1="274" x2="256" y2="352" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- 5. Flared Knife-Edge Destroyer Bow in Extreme Forced Perspective -->
+  <polygon points="256,472 34,316 134,288 256,356" fill="url(#hullPort)" stroke="#0f172a" stroke-width="4.5" stroke-linejoin="round"/>
+  <polygon points="256,472 478,316 378,288 256,356" fill="url(#hullStarboard)" stroke="#0f172a" stroke-width="4.5" stroke-linejoin="round"/>
+  <line x1="256" y1="418" x2="66" y2="306" stroke="#1e293b" stroke-width="2.5"/>
+  <line x1="256" y1="418" x2="446" y2="306" stroke="#f8fafc" stroke-width="2.5" stroke-opacity="0.7"/>
+  <ellipse cx="182" cy="368" rx="9" ry="6" transform="rotate(28 182 368)" fill="#0f172a"/>
+  <ellipse cx="330" cy="368" rx="9" ry="6" transform="rotate(-28 330 368)" fill="#0f172a"/>
+
+  <!-- Red Waterline Boot-Topping -->
+  <polygon points="256,466 48,324 62,333 256,456" fill="#dc2626"/>
+  <polygon points="256,466 464,324 450,333 256,456" fill="#ef4444"/>
+  <line x1="256" y1="356" x2="256" y2="474" stroke="#0f172a" stroke-width="5"/>
+  <line x1="258" y1="358" x2="258" y2="470" stroke="#f8fafc" stroke-width="2" stroke-opacity="0.75"/>
+
+  <!-- 6. Churning Bow Wave & High-Speed Sea Spray Plumes -->
+  <path d="M256,466 C195,435 120,382 32,330 C16,358 38,412 108,452 C164,484 218,496 256,492 Z" fill="#bae6fd" fill-opacity="0.78" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M256,466 C317,435 392,382 480,330 C496,358 474,412 404,452 C348,484 294,496 256,492 Z" fill="#e0f2fe" fill-opacity="0.82" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M256,470 C205,455 135,418 58,364 C72,402 128,454 206,482 L256,486 Z" fill="#ffffff"/>
+  <path d="M256,470 C307,455 377,418 454,364 C440,402 384,454 306,482 L256,486 Z" fill="#ffffff"/>
+  <g fill="#ffffff" stroke="#0f172a" stroke-width="1.5">
+    <circle cx="46" cy="316" r="5"/>
+    <circle cx="28" cy="342" r="4"/>
+    <circle cx="76" cy="348" r="4.5"/>
+    <circle cx="466" cy="316" r="5"/>
+    <circle cx="484" cy="342" r="4"/>
+    <circle cx="436" cy="348" r="4.5"/>
+  </g>
+
+  <!-- 7. Forward 5-Inch Naval Gun Turret & Fiery Muzzle Blast -->
+  <polygon points="222,306 232,276 280,276 290,306" fill="url(#superGrad)" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
+  <circle cx="256" cy="306" r="64" fill="url(#muzzleGlow)"/>
+  <polygon points="256,256 266,286 298,274 278,300 310,312 276,318 290,348 262,328 256,360 250,328 222,348 236,318 202,312 234,300 214,274 246,286" fill="#f97316" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="256,272 263,292 284,284 271,302 292,310 270,314 278,334 260,321 256,342 252,321 234,334 242,314 220,310 241,302 228,284 249,292" fill="#fef08a"/>
+  <polygon points="242,294 248,294 245,322 237,322" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
+  <polygon points="264,294 270,294 275,322 267,322" fill="#64748b" stroke="#0f172a" stroke-width="2.5"/>
+
+  <!-- 8. Giant Foreshortened Artillery Shell Hurtling Out of Frame -->
+  <g transform="translate(332, 398) rotate(26)">
+    <polygon points="-24,-22 -72,-115 0,-80 72,-115 24,-22" fill="#facc15" fill-opacity="0.82"/>
+    <polygon points="-14,-22 -38,-82 0,-60 38,-82 14,-22" fill="#ffffff" fill-opacity="0.9"/>
+    <path d="M-32,-18 A32,18 0 0,1 32,-18 L46,28 A46,26 0 0,1 -46,28 Z" fill="url(#shellBrass)" stroke="#0f172a" stroke-width="5"/>
+    <ellipse cx="0" cy="18" rx="44" ry="22" fill="#b45309" stroke="#0f172a" stroke-width="4.5"/>
+    <ellipse cx="0" cy="35" rx="35" ry="23" fill="url(#shellNose)" stroke="#0f172a" stroke-width="5"/>
+    <ellipse cx="-11" cy="30" rx="10" ry="6" transform="rotate(-18 -11 30)" fill="#ffffff" fill-opacity="0.9"/>
+  </g>
+
+  <!-- 9. Bold Tilted "SALVO!" Comic Title Banner -->
+  <g transform="translate(256, 78) rotate(-2.2)">
+    <rect x="-196" y="-42" width="406" height="96" rx="8" fill="#0f172a"/>
+    <rect x="-204" y="-50" width="406" height="96" rx="8" fill="#facc15" stroke="#0f172a" stroke-width="7"/>
+    <text x="0" y="23" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-weight="900" font-size="92" letter-spacing="4" fill="#fefce8" stroke="#0f172a" stroke-width="7" paint-order="stroke">SALVO!</text>
+  </g>
+
+  <!-- 10. Crisp Outer App Frame Border -->
+  <rect x="5" y="5" width="502" height="502" fill="none" stroke="#0f172a" stroke-width="10"/>
+</svg>
