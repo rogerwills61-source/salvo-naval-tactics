@@ -1,11 +1,11 @@
-const CACHE_NAME = 'salvo-3d-v4';
+const CACHE_NAME = 'salvo-3d-v5';
 const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest?v=4',
-  './icon-192.png?v=4',
-  './icon-512.png?v=4',
-  './icon.svg?v=4'
+  './manifest.webmanifest?v=5',
+  './icon-192.png?v=5',
+  './icon-512.png?v=5',
+  './icon.svg?v=5'
 ];
 
 self.addEventListener('install', (event) => {
