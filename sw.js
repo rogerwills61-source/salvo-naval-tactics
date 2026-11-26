@@ -1,11 +1,10 @@
-const CACHE_NAME = 'salvo-3d-v5';
+const CACHE_NAME = 'salvo-3d-v6';
 const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest?v=5',
-  './icon-192.png?v=5',
-  './icon-512.png?v=5',
-  './icon.svg?v=5'
+  './manifest.webmanifest?v=6',
+  './icon-192.png?v=6',
+  './icon-512.png?v=6'
 ];
 
 self.addEventListener('install', (event) => {
@@ -26,6 +25,9 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  const reqUrl = new URL(event.request.url);
+  if (reqUrl.origin !== self.location.origin) return;
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
@@ -35,6 +37,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
   );
 });
