@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SALVO!" />
-  <link rel="manifest" href="./manifest.json?v=10" />
-  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png" />
-  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="manifest" href="./manifest.json?v=11" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./apple-touch-icon.png?v=11" />
+  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=11" />
   <title>SALVO! — 3D Comic Naval Tactics</title>
 
   <!-- Google Fonts: Classic War-Comic Typography -->
@@ -1004,13 +1004,14 @@
             return null;
           };
           const checks = await Promise.all([
-            checkAsset('./manifest.json?v=10', 'json'),
-            checkAsset('./icon-192.png', 'image/png'),
-            checkAsset('./icon-512.png', 'image/png'),
+            checkAsset('./manifest.json?v=11', 'json'),
+            checkAsset('./icon-192.png?v=11', 'image/png'),
+            checkAsset('./icon-512.png?v=11', 'image/png'),
+            checkAsset('./icon-maskable-512.png?v=11', 'image/png'),
             checkAsset('./sw.js', 'javascript')
           ]);
           const missing = checks.filter(Boolean);
-          const pngMissing = missing.some(m => m.includes('icon-192.png') || m.includes('icon-512.png'));
+          const pngMissing = missing.some(m => m.includes('icon-192.png') || m.includes('icon-512.png') || m.includes('icon-maskable-512.png'));
           if (dlBtn) dlBtn.classList.toggle('hidden', !pngMissing);
 
           const swReg = ('serviceWorker' in navigator) ? await navigator.serviceWorker.getRegistration('./') : null;
@@ -1023,7 +1024,7 @@
           }
         } catch (e) {
           if (dlBtn) dlBtn.classList.remove('hidden');
-          el.textContent = 'Ensure index.html, sw.js, manifest.json, icon-192.png & icon-512.png are in the repo root.';
+          el.textContent = 'Ensure index.html, sw.js, manifest.json, icon-192.png, icon-512.png & icon-maskable-512.png are in the repo root.';
         }
       }
     };

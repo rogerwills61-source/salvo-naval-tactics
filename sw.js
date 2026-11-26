@@ -1,10 +1,12 @@
-const CACHE_NAME = 'salvo-3d-v10';
+const CACHE_NAME = 'salvo-3d-v11';
 const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=10',
-  './icon-192.png',
-  './icon-512.png'
+  './manifest.json?v=11',
+  './icon-192.png?v=11',
+  './icon-512.png?v=11',
+  './icon-maskable-512.png?v=11',
+  './apple-touch-icon.png?v=11'
 ];
 
 self.addEventListener('install', (event) => {
