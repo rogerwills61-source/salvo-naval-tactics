@@ -1,8 +1,8 @@
-const CACHE_NAME = 'salvo-3d-v9';
+const CACHE_NAME = 'salvo-3d-v10';
 const CORE_ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest?v=9',
+  './manifest.json?v=10',
   './icon-192.png',
   './icon-512.png'
 ];
