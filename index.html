@@ -407,15 +407,15 @@
             <div class="grid grid-cols-3 md:flex gap-1.5">
               <button id="btn-rotate" class="comic-btn bg-sky-300 hover:bg-sky-200 px-2.5 py-1.5 text-sm sm:text-base text-slate-900">
                 ↻ ROTATE
-      <!-- iOS / Manual Browser Install Helper Box -->
-      <div id="ios-install-help" class="hidden mb-2.5 p-2.5 rounded-lg bg-indigo-100 border-2 border-slate-900 text-xs font-bold text-slate-800">
-        <div class="flex items-center justify-between mb-1">
-          <span id="install-help-title" class="font-comic-title text-base text-slate-900">INSTALL SALVO! APP</span>
-          <button id="btn-close-ios-help" class="px-1.5 py-0.5 rounded bg-slate-900 text-white text-[10px]">✕</button>
-        </div>
-        <div id="install-help-steps">
-          <div>1. Tap Safari's <strong>Share</strong> icon (square with upward arrow).</div>
-          <div>2. Scroll down and tap <strong>Add to Home Screen</strong>.</div>
+              </button>
+              <button id="btn-auto-deploy" class="comic-btn bg-amber-300 hover:bg-amber-200 px-2.5 py-1.5 text-sm sm:text-base text-slate-900">
+                ⚡ AUTO
+              </button>
+              <button id="btn-ready" class="comic-btn bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 text-sm sm:text-base text-slate-900" disabled>
+                ⚓ READY!
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -488,14 +488,16 @@
         📲 INSTALL SALVO! APP
       </button>
 
-      <!-- iOS Safari Install Helper Box -->
+      <!-- iOS / Manual Browser Install Helper Box -->
       <div id="ios-install-help" class="hidden mb-2.5 p-2.5 rounded-lg bg-indigo-100 border-2 border-slate-900 text-xs font-bold text-slate-800">
         <div class="flex items-center justify-between mb-1">
-          <span class="font-comic-title text-base text-slate-900">INSTALL ON IPHONE / IPAD</span>
+          <span id="install-help-title" class="font-comic-title text-base text-slate-900">INSTALL SALVO! APP</span>
           <button id="btn-close-ios-help" class="px-1.5 py-0.5 rounded bg-slate-900 text-white text-[10px]">✕</button>
         </div>
-        <div>1. Tap Safari's <strong>Share</strong> icon (square with upward arrow).</div>
-        <div>2. Scroll down and tap <strong>Add to Home Screen</strong>.</div>
+        <div id="install-help-steps">
+          <div>1. Tap Safari's <strong>Share</strong> icon (square with upward arrow).</div>
+          <div>2. Scroll down and tap <strong>Add to Home Screen</strong>.</div>
+        </div>
       </div>
 
       <!-- 2-Player Cross-Device Multiplayer -->
@@ -974,64 +976,6 @@
       pwaInstall.deferredPrompt = e;
       pwaInstall.updateButtonVisibility();
     });
-
-        window.addEventListener('appinstalled', () => {
-          this.isInstalled = true;
-          this.deferredPrompt = null;
-          this.updateButtonVisibility();
-          showToast('SALVO! installed to your device!');
-        });
-
-        if (window.matchMedia) {
-          const mq = window.matchMedia('(display-mode: standalone)');
-          if (mq.addEventListener) {
-            mq.addEventListener('change', (ev) => {
-              if (ev.matches) {
-                this.isInstalled = true;
-                this.updateButtonVisibility();
-              }
-            });
-          }
-        }
-
-        this.updateButtonVisibility();
-      },
-
-      updateButtonVisibility() {
-        const btn = document.getElementById('btn-install-app');
-        const iosHelp = document.getElementById('ios-install-help');
-        if (!btn) return;
-        if (this.isInstalled || this.checkStandalone()) {
-          btn.classList.add('hidden');
-          if (iosHelp) iosHelp.classList.add('hidden');
-          return;
-        }
-        const canShow = !!this.deferredPrompt || this.isIosSafari;
-        btn.classList.toggle('hidden', !canShow);
-      },
-
-      async triggerInstall() {
-        if (this.isInstalled || this.checkStandalone()) {
-          this.updateButtonVisibility();
-          return;
-        }
-        if (this.deferredPrompt) {
-          const promptEvent = this.deferredPrompt;
-          this.deferredPrompt = null;
-          promptEvent.prompt();
-          try {
-            const choice = await promptEvent.userChoice;
-            if (choice && choice.outcome === 'accepted') {
-              this.isInstalled = true;
-            }
-          } catch (e) {}
-          this.updateButtonVisibility();
-        } else if (this.isIosSafari) {
-          const iosHelp = document.getElementById('ios-install-help');
-          if (iosHelp) iosHelp.classList.toggle('hidden');
-        }
-      }
-    };
 
     // =========================================================================
     // 1. CONSTANTS, FLEET SPECIFICATION & PERSISTENCE KEY
