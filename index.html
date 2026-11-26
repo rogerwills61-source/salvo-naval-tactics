@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SALVO!" />
-  <link rel="manifest" href="./manifest.webmanifest?v=8" />
-  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png?v=8" />
-  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=8" />
+  <link rel="manifest" href="./manifest.webmanifest?v=9" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png" />
+  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
   <title>SALVO! — 3D Comic Naval Tactics</title>
 
   <!-- Google Fonts: Classic War-Comic Typography -->
@@ -488,7 +488,7 @@
         📲 INSTALL SALVO! APP
       </button>
 
-      <!-- iOS / Manual Browser Install Helper Box -->
+      <!-- iOS / Manual Browser Install & Diagnostic Helper Box -->
       <div id="ios-install-help" class="hidden mb-2.5 p-2.5 rounded-lg bg-indigo-100 border-2 border-slate-900 text-xs font-bold text-slate-800">
         <div class="flex items-center justify-between mb-1">
           <span id="install-help-title" class="font-comic-title text-base text-slate-900">INSTALL SALVO! APP</span>
@@ -498,6 +498,9 @@
           <div>1. Tap Safari's <strong>Share</strong> icon (square with upward arrow).</div>
           <div>2. Scroll down and tap <strong>Add to Home Screen</strong>.</div>
         </div>
+        <button id="btn-download-missing-pngs" class="hidden comic-btn w-full bg-yellow-300 hover:bg-yellow-200 py-1.5 px-2 text-sm text-slate-900 mt-2">
+          ⬇️ DOWNLOAD icon-192.png & icon-512.png
+        </button>
       </div>
 
       <!-- 2-Player Cross-Device Multiplayer -->
@@ -867,6 +870,18 @@
         return c.toDataURL('image/png');
       },
 
+      downloadPngPair() {
+        const save = (sz, name) => {
+          const a = document.createElement('a');
+          a.download = name;
+          a.href = this.generateIconDataUrl(sz);
+          a.click();
+        };
+        save(192, 'icon-192.png');
+        setTimeout(() => save(512, 'icon-512.png'), 250);
+        showToast('Saved icon-192.png & icon-512.png — upload both to GitHub root!');
+      },
+
       checkStandalone() {
         const displayStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
         const iosStandalone = window.navigator && window.navigator.standalone === true;
@@ -973,6 +988,7 @@
 
       async runDiagnostics() {
         const el = document.getElementById('pwa-diag-line');
+        const dlBtn = document.getElementById('btn-download-missing-pngs');
         if (!el) return;
         try {
           if (this.swError) {
@@ -987,22 +1003,26 @@
             return null;
           };
           const checks = await Promise.all([
-            checkAsset('./manifest.webmanifest?v=8', 'json'),
-            checkAsset('./icon-192.png?v=8', 'image/png'),
-            checkAsset('./icon-512.png?v=8', 'image/png'),
+            checkAsset('./manifest.webmanifest?v=9', 'json'),
+            checkAsset('./icon-192.png', 'image/png'),
+            checkAsset('./icon-512.png', 'image/png'),
             checkAsset('./sw.js', 'javascript')
           ]);
           const missing = checks.filter(Boolean);
+          const pngMissing = missing.some(m => m.includes('icon-192.png') || m.includes('icon-512.png'));
+          if (dlBtn) dlBtn.classList.toggle('hidden', !pngMissing);
+
           const swReg = ('serviceWorker' in navigator) ? await navigator.serviceWorker.getRegistration('./') : null;
           if (missing.length) {
-            el.textContent = 'Check repo root files: ' + missing.join(', ');
+            el.textContent = 'Missing in GitHub repo root: ' + missing.join(', ');
           } else if (!swReg || !swReg.active) {
             el.textContent = 'Service Worker activating — reload once, then tap Install.';
           } else {
             el.textContent = 'All PWA files & Service Worker OK! Tap Chrome ⋮ → Install app.';
           }
         } catch (e) {
-          el.textContent = 'Check that index.html, sw.js, manifest.webmanifest, icon-192.png & icon-512.png are in the repo root.';
+          if (dlBtn) dlBtn.classList.remove('hidden');
+          el.textContent = 'Ensure index.html, sw.js, manifest.webmanifest, icon-192.png & icon-512.png are in the repo root.';
         }
       }
     };
@@ -3425,6 +3445,11 @@
       document.getElementById('btn-install-app').onclick = () => {
         audio.playClick();
         pwaInstall.triggerInstall();
+      };
+
+      document.getElementById('btn-download-missing-pngs').onclick = () => {
+        audio.playClick();
+        pwaInstall.downloadPngPair();
       };
 
       document.getElementById('btn-close-ios-help').onclick = () => {
