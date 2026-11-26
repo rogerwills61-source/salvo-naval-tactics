@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="SALVO!" />
-  <link rel="manifest" href="./manifest.webmanifest?v=7" />
-  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png?v=7" />
-  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=7" />
+  <link rel="manifest" href="./manifest.webmanifest?v=8" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="./icon-192.png?v=8" />
+  <link id="favicon-link" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=8" />
   <title>SALVO! — 3D Comic Naval Tactics</title>
 
   <!-- Google Fonts: Classic War-Comic Typography -->
@@ -592,7 +592,7 @@
       deferredPrompt: null,
       isInstalled: false,
       isIosSafari: false,
-
+      swError: null,
       generateIconDataUrl(size) {
         const c = document.createElement('canvas');
         c.width = size;
@@ -891,14 +891,15 @@
         } catch (e) {}
 
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-          navigator.serviceWorker.register('./sw.js?v=7', { scope: './', updateViaCache: 'none' }).catch(() => {});
+          navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' })
+            .then((reg) => {
+              this.swError = null;
+              if (reg && reg.update) reg.update().catch(() => {});
+            })
+            .catch((err) => {
+              this.swError = err ? String(err.message || err) : 'Service Worker registration failed';
+            });
         }
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault();
-          this.deferredPrompt = e;
-          this.updateButtonVisibility();
-        });
 
         window.addEventListener('appinstalled', () => {
           this.isInstalled = true;
@@ -974,19 +975,31 @@
         const el = document.getElementById('pwa-diag-line');
         if (!el) return;
         try {
+          if (this.swError) {
+            el.textContent = 'Service Worker error: ' + this.swError;
+            return;
+          }
+          const checkAsset = async (url, expectedType) => {
+            const r = await fetch(url, { cache: 'no-store' });
+            if (!r.ok) return url.split('?')[0].replace('./', '');
+            const ct = (r.headers.get('content-type') || '').toLowerCase();
+            if (expectedType && !ct.includes(expectedType)) return url.split('?')[0].replace('./', '') + ' (wrong type)';
+            return null;
+          };
           const checks = await Promise.all([
-            fetch('./manifest.webmanifest?v=7').then(r => r.ok ? null : 'manifest.webmanifest'),
-            fetch('./icon-192.png?v=7').then(r => r.ok ? null : 'icon-192.png'),
-            fetch('./icon-512.png?v=7').then(r => r.ok ? null : 'icon-512.png')
+            checkAsset('./manifest.webmanifest?v=8', 'json'),
+            checkAsset('./icon-192.png?v=8', 'image/png'),
+            checkAsset('./icon-512.png?v=8', 'image/png'),
+            checkAsset('./sw.js', 'javascript')
           ]);
           const missing = checks.filter(Boolean);
           const swReg = ('serviceWorker' in navigator) ? await navigator.serviceWorker.getRegistration('./') : null;
           if (missing.length) {
-            el.textContent = 'Missing in repo root: ' + missing.join(', ');
+            el.textContent = 'Check repo root files: ' + missing.join(', ');
           } else if (!swReg || !swReg.active) {
             el.textContent = 'Service Worker activating — reload once, then tap Install.';
           } else {
-            el.textContent = 'PWA ready (SW active & icons found). Use browser menu if prompt is cooling down.';
+            el.textContent = 'All PWA files & Service Worker OK! Tap Chrome ⋮ → Install app.';
           }
         } catch (e) {
           el.textContent = 'Check that index.html, sw.js, manifest.webmanifest, icon-192.png & icon-512.png are in the repo root.';
