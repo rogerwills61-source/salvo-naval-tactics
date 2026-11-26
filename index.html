@@ -396,7 +396,7 @@
       <!-- Ship Deployment Panel -->
       <div id="setup-panel" class="hidden comic-panel bg-amber-50/95 p-2 sm:p-2.5">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-          <!-- 5 Ship Selector Buttons (Classic full-name pills on laptop, compact 5-col on mobile) -->
+          <!-- 5 Ship Selector Buttons -->
           <div id="ship-selector-row" class="order-2 md:order-1 grid grid-cols-5 md:flex md:flex-wrap md:items-center gap-1.5 min-w-0"></div>
 
           <!-- Hint + Action Buttons -->
@@ -468,12 +468,12 @@
         <p class="text-xs sm:text-sm font-bold text-slate-700 mt-1">3D Comic Naval Tactics • Sink a Ship, Earn a Bonus Shot!</p>
       </div>
 
-      <!-- Return to Live Match (Shown when MENU pressed mid-game) -->
+      <!-- Return to Live Match -->
       <button id="btn-resume-live" class="hidden comic-btn w-full bg-emerald-400 hover:bg-emerald-300 py-2.5 px-3 text-lg sm:text-xl text-slate-900 mb-2.5 whitespace-normal">
         ↩ RETURN TO LIVE MATCH
       </button>
 
-      <!-- Continue Saved Solo AI Battle (localStorage) -->
+      <!-- Continue Saved Solo AI Battle -->
       <button id="btn-resume-saved-ai" class="hidden comic-btn w-full bg-sky-300 hover:bg-sky-200 py-2.5 px-3 text-lg sm:text-xl text-slate-900 mb-2.5 whitespace-normal">
         ▶ CONTINUE SAVED AI BATTLE
       </button>
@@ -596,6 +596,7 @@
       isInstalled: false,
       isIosSafari: false,
       swError: null,
+
       generateIconDataUrl(size) {
         const c = document.createElement('canvas');
         c.width = size;
@@ -1027,7 +1028,6 @@
       }
     };
 
-    // Capture beforeinstallprompt early in case it fires before DOMContentLoaded
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       pwaInstall.deferredPrompt = e;
